@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f3f6f1;
+  --color-brand-100: #e3eedc;
+  --color-brand-200: #c4d6b8;
+  --color-brand-500: #87a96b;
+  --color-brand-600: #749b5a;
+  --color-brand-700: #618d4a;
+  --color-warm-50: #fffbeb;
+  --color-warm-400: #fbbf24;
+  --color-warm-500: #f59e0b;
+  --color-warm-600: #d97706;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #f9fafb;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media print {
+  header, .controls-bar, .week-planner, .no-print { display: none !important; }
+  .shopping-list { display: block !important; }
+}
