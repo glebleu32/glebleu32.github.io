@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#87a96b"/>
+
+  <!-- Plate outer ring -->
+  <circle cx="256" cy="276" r="152" fill="none" stroke="white" stroke-width="18" opacity="0.9"/>
+  <!-- Plate inner ring -->
+  <circle cx="256" cy="276" r="104" fill="none" stroke="white" stroke-width="11" opacity="0.55"/>
+
+  <!-- Fork: 3 tines -->
+  <rect x="113" y="88" width="11" height="68" rx="5.5" fill="white"/>
+  <rect x="129" y="88" width="11" height="68" rx="5.5" fill="white"/>
+  <rect x="145" y="88" width="11" height="68" rx="5.5" fill="white"/>
+  <!-- Fork bridge between tines and handle -->
+  <path d="M113 156 Q113 184 134 190 Q155 184 156 156 L145 156 Q145 172 134 175 Q123 172 124 156 Z" fill="white"/>
+  <!-- Fork handle -->
+  <rect x="126" y="188" width="17" height="152" rx="8.5" fill="white"/>
+
+  <!-- Knife blade -->
+  <path d="M356 88 L372 88 Q404 130 404 194 Q404 222 372 230 L356 230 Z" fill="white"/>
+  <!-- Knife handle -->
+  <rect x="356" y="232" width="16" height="108" rx="8" fill="white"/>
+</svg>
