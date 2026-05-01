@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DAYS } from './data/constants';
 import { pickRecipeForDay } from './utils/recipeSelector';
+import { saveState, loadState, clearState } from './utils/storage';
 import Header from './components/layout/Header';
 import FilterBar from './components/controls/FilterBar';
 import ServingInput from './components/controls/ServingInput';
@@ -10,11 +11,23 @@ import ShoppingList from './components/shopping/ShoppingList';
 const initialWeekPlan = () =>
   Object.fromEntries(DAYS.map(day => [day, { cuisine: '', recipe: null }]));
 
+function initState() {
+  const saved = loadState();
+  if (saved) return saved;
+  return { weekPlan: initialWeekPlan(), servings: 4, activeFilters: [] };
+}
+
+const { weekPlan: savedPlan, servings: savedServings, activeFilters: savedFilters } = initState();
+
 export default function App() {
-  const [servings, setServings] = useState(4);
-  const [activeFilters, setActiveFilters] = useState([]);
-  const [weekPlan, setWeekPlan] = useState(initialWeekPlan);
+  const [servings, setServings] = useState(savedServings);
+  const [activeFilters, setActiveFilters] = useState(savedFilters);
+  const [weekPlan, setWeekPlan] = useState(savedPlan);
   const [showShopping, setShowShopping] = useState(false);
+
+  useEffect(() => {
+    saveState(weekPlan, servings, activeFilters);
+  }, [weekPlan, servings, activeFilters]);
 
   const handleCuisineChange = (day, cuisine) => {
     const recipe = cuisine ? pickRecipeForDay(cuisine, activeFilters) : null;
@@ -48,7 +61,14 @@ export default function App() {
     setWeekPlan(prev => ({ ...prev, [day]: { cuisine, recipe: newRecipe } }));
   };
 
-  const handleServingsChange = (n) => setServings(n);
+  const handleNewWeek = () => {
+    if (!window.confirm('Start a new week? This will clear your current plan.')) return;
+    clearState();
+    setWeekPlan(initialWeekPlan());
+    setServings(4);
+    setActiveFilters([]);
+    setShowShopping(false);
+  };
 
   const plannedCount = Object.values(weekPlan).filter(d => d.recipe).length;
 
@@ -60,14 +80,14 @@ export default function App() {
       {/* Controls bar */}
       <div className="controls-bar bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <ServingInput servings={servings} onChange={handleServingsChange} />
+          <ServingInput servings={servings} onChange={setServings} />
           <div className="flex items-center gap-3">
             {plannedCount > 0 && (
               <button
-                onClick={() => setWeekPlan(initialWeekPlan())}
+                onClick={handleNewWeek}
                 className="text-sm text-red-500 hover:text-red-600 font-medium no-print"
               >
-                Clear all
+                Start New Week
               </button>
             )}
             <button

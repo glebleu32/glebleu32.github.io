@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { buildShoppingList } from '../../utils/shoppingList';
 import StoreSection from './StoreSection';
+import RecipeCard from '../planner/RecipeCard';
 import Button from '../common/Button';
+import { DAYS } from '../../data/constants';
 
 export default function ShoppingList({ weekPlan, servings }) {
+  const [expandedDay, setExpandedDay] = useState(null);
   const planned = Object.values(weekPlan).filter(d => d.recipe);
 
   if (planned.length === 0) {
@@ -22,6 +26,8 @@ export default function ShoppingList({ weekPlan, servings }) {
 
   return (
     <div className="shopping-list max-w-screen-xl mx-auto px-4 pb-10">
+
+      {/* Grocery list header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
           <h2 className="text-lg font-semibold text-gray-800">Grocery List</h2>
@@ -42,11 +48,37 @@ export default function ShoppingList({ weekPlan, servings }) {
         </Button>
       </div>
 
+      {/* Grocery sections */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sections.map(([sectionName, items]) => (
           <StoreSection key={sectionName} sectionName={sectionName} items={items} />
         ))}
       </div>
+
+      {/* This Week's Meals */}
+      <div className="mt-10">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">This Week's Meals</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {DAYS.filter(day => weekPlan[day]?.recipe).map(day => (
+            <div key={day} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-brand-500 px-4 py-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-white">{day}</p>
+              </div>
+              <div className="p-3">
+                <RecipeCard
+                  recipe={weekPlan[day].recipe}
+                  servings={servings}
+                  readOnly
+                  expanded={expandedDay === day}
+                  onToggleExpand={() => setExpandedDay(d => d === day ? null : day)}
+                  onRegenerate={() => {}}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
